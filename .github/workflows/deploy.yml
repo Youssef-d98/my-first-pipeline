@@ -1,0 +1,24 @@
+name: Live Demo Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      # الخطوة 1: سحب الملفات من GitHub للكمبيوتر الوهمي
+      - name: Copy Files from GitHub
+        uses: actions/checkout@v4
+
+      # الخطوة 2: حدف الملف للسيرفر مباشرة كـ root
+      - name: Push File to Server via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "index.html"
+          target: "/var/www/html/"
